@@ -51,6 +51,7 @@ namespace Efectos
 
         public int Read(float[] buffer, int offset, int count)
         {
+            
             var read = fuente.Read(buffer, offset, count);
 
             for (int i=0; i < read; i++)
