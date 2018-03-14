@@ -11,8 +11,9 @@ namespace Efectos
     {
         private ISampleProvider fuente;
 
-        int offsetTiempoMS; 
+        int offsetTiempoMS;
 
+        List<float> muestras = new List<float>();
 
         public Delay(ISampleProvider fuente)
         {
@@ -32,10 +33,9 @@ namespace Efectos
         //Offset es el numero de muestras leídas hasta ahorita
         public int Read(float[] buffer, int offset, int count)
         {
-            Console.WriteLine("************");
             var read = fuente.Read(buffer, offset, count);
             float tiempoTranscurrido =
-               (float) offset / (float)fuente.WaveFormat.SampleRate;
+               (float) muestras.Count / (float)fuente.WaveFormat.SampleRate;
             float tiempoTranscurridoMS = tiempoTranscurrido * 1000;
             int numMuestrasOffsetTiempo = (int)
                 (((float)offsetTiempoMS / 1000.0f) * (float)fuente.WaveFormat.SampleRate);
@@ -44,14 +44,18 @@ namespace Efectos
             {
                 for (int i = 0; i < read; i++)
                 {
-                    buffer[offset + i] +=
-                        buffer[offset+i-numMuestrasOffsetTiempo];
-                    Console.WriteLine("Actual: " + (offset + i));
-                    Console.WriteLine("Offset: " + (offset + i - numMuestrasOffsetTiempo));
+                    buffer[i] +=
+                        muestras[muestras.Count+
+                        i-numMuestrasOffsetTiempo];
+                    //Console.WriteLine("Actual: " + (offset + i));
+                    //Console.WriteLine("Offset: " + (offset + i - numMuestrasOffsetTiempo));
                 }
             }
-            
 
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                muestras.Add(buffer[i]);
+            }
             return read;
         }
     }
