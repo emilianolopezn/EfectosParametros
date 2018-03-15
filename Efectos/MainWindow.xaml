@@ -13,6 +13,8 @@
         <Button x:Name="btnEfecto" Content="Efecto" HorizontalAlignment="Left" Margin="91,38,0,0" VerticalAlignment="Top" Width="74" Click="btnEfecto_Click"/>
         <Slider x:Name="sldFactor" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top" Width="497" Maximum="2" LargeChange="0" Value="0.5" ValueChanged="sldFactor_ValueChanged"/>
         <Button x:Name="btnDelay" Content="Delay" HorizontalAlignment="Left" Margin="170,38,0,0" VerticalAlignment="Top" Width="75" Click="btnDelay_Click"/>
+        <Slider x:Name="sldMS" HorizontalAlignment="Left" Margin="19,102,0,0" VerticalAlignment="Top" Width="488" Value="50" Maximum="5000" Minimum="50" ValueChanged="sldMS_ValueChanged"/>
+        <TextBlock x:Name="lblMS" HorizontalAlignment="Left" Margin="19,125,0,0" TextWrapping="Wrap" Text="50ms" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

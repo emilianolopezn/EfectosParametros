@@ -99,5 +99,15 @@ namespace Efectos
                 waveOut.Play();
             }
         }
+
+        private void sldMS_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (lblMS != null)
+            {
+                lblMS.Text = sldMS.Value.ToString() + "ms";
+                delayProvider.offsetTiempoMS = (int)sldMS.Value;
+            }
+            
+        }
     }
 }
