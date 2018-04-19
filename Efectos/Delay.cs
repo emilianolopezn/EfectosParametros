@@ -15,11 +15,16 @@ namespace Efectos
 
         List<float> muestras = new List<float>();
 
+        private int tamañoBuffer;
+        private int cantidadMuestasBorradas = 0;
+        private int cantidadMuestrasTranscurridas = 0;
+
         public Delay(ISampleProvider fuente)
         {
             this.fuente = fuente;
             offsetTiempoMS = 600;
-            //50ms - 5000ms
+
+            tamañoBuffer = 20 * fuente.WaveFormat.SampleRate;
 
         }
 
@@ -38,8 +43,8 @@ namespace Efectos
             //Calculo de tiempos
             var read = fuente.Read(buffer, offset, count);
             float tiempoTranscurrido =
-               (float) muestras.Count / (float)fuente.WaveFormat.SampleRate;
-            int muestrasTranscurridas = muestras.Count;
+               (float) cantidadMuestrasTranscurridas / (float)fuente.WaveFormat.SampleRate;
+            
             float tiempoTranscurridoMS = tiempoTranscurrido * 1000;
             int numMuestrasOffsetTiempo = (int)
                 (((float)offsetTiempoMS / 1000.0f) * (float)fuente.WaveFormat.SampleRate);
@@ -49,7 +54,14 @@ namespace Efectos
             {
                 muestras.Add(buffer[i]);
             }
-
+            //Quitar elementos de nuestro buffer si se pasó del máximo
+            if (muestras.Count > tamañoBuffer)
+            {
+                //Ya se pasó
+                int diferencia = muestras.Count - tamañoBuffer;
+                muestras.RemoveRange(0, diferencia);
+                cantidadMuestasBorradas += diferencia;
+            }
 
             //Modificar muestras
             if ( tiempoTranscurridoMS > offsetTiempoMS)
@@ -58,12 +70,12 @@ namespace Efectos
                 {
                     
                     buffer[i] +=
-                        muestras[muestrasTranscurridas+
+                        muestras[(cantidadMuestrasTranscurridas - cantidadMuestasBorradas) +
                         i-numMuestrasOffsetTiempo];
                 }
             }
 
-            
+            cantidadMuestrasTranscurridas += read;
             return read;
         }
     }
